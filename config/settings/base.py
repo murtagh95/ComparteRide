@@ -20,7 +20,7 @@ USE_L10N = True
 USE_TZ = True
 
 # DATABASES
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
