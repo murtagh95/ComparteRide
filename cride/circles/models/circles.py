@@ -29,7 +29,7 @@ class Circle(CrideModel):
 
     verified = models.BooleanField(
         'verified circle',
-        default=True,
+        default=False,
         help_text='Verified circle are also know as official communities.'
     )
     is_public = models.BooleanField(
