@@ -20,9 +20,14 @@ from rest_framework.authtoken.models import Token
 # Models
 from cride.users.models import User, Profile
 
+# Serializer
+from cride.users.serializers.profile import ProfileModelSerializer
+
 
 class UserModelSerializer(serializers.ModelSerializer):
     """ User model serializer. """
+
+    profile = ProfileModelSerializer(read_only=True)
 
     class Meta:
         """ Meta class. """
@@ -31,7 +36,8 @@ class UserModelSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
-            'phone_number'
+            'phone_number',
+            'profile'
         )
 
 
@@ -78,7 +84,9 @@ class UserSignUpSerializer(serializers.Serializer):
     def create(self, validated_data):
         """ Handle user and profile creation. """
         validated_data.pop('password_confirmation')
-        user = User.objects.create_user(**validated_data, is_verified=False)
+        user = User.objects.create_user(**validated_data,
+                                        is_verified=False,
+                                        is_client=True)
         Profile.objects.create(user=user)
         self.send_confirmation_email(user)
         return user
