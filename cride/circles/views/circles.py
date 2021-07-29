@@ -5,13 +5,13 @@ from rest_framework import viewsets, mixins
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from cride.permissions.circles import IsCircleAdmin
+from cride.circles.permissions.circle import IsCircleAdmin
 
 # Serializers
 from cride.circles.serializers import CircleModelSerializer
 
 # Models
-from cride.circles.models import Circle, Memberships
+from cride.circles.models import Circle, Membership
 
 
 class CircleViewSet(mixins.CreateModelMixin,
@@ -44,7 +44,7 @@ class CircleViewSet(mixins.CreateModelMixin,
         user = self.request.user
         profile = user.profile
 
-        Memberships.objects.create(
+        Membership.objects.create(
             user=user,
             profile=profile,
             circle=circle,

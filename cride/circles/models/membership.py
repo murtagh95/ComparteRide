@@ -1,4 +1,4 @@
-""" Memberships models """
+""" Membership models """
 
 # Django
 from django.db import models
@@ -7,10 +7,10 @@ from django.db import models
 from cride.utils.models import CrideModel
 
 
-class Memberships(CrideModel):
-    """ Memberships models
+class Membership(CrideModel):
+    """ Membership models
 
-    A memberships is the table that holds the relationship between
+    A membership is the table that holds the relationship between
     a user and a circle. """
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     profile = models.ForeignKey('users.Profile', on_delete=models.CASCADE)
