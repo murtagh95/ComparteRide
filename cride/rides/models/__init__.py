@@ -1,1 +1,1 @@
-from .rides import Ride
+from .ride import Ride
