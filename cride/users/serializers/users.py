@@ -1,18 +1,17 @@
 """ Users serializers. """
 
 # Utilities
-from datetime import timedelta
 import jwt
+
+# Taskas
+from cride.taskapp.tasks import send_confirmation_email
 
 # Django
 from django.contrib.auth import authenticate, password_validation
 from django.core.validators import RegexValidator
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 from django.conf import settings
 
 # Django REST Framework
-from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework.authtoken.models import Token
@@ -88,41 +87,8 @@ class UserSignUpSerializer(serializers.Serializer):
                                         is_verified=False,
                                         is_client=True)
         Profile.objects.create(user=user)
-        self.send_confirmation_email(user)
+        send_confirmation_email.delay(user_pk=user.pk)
         return user
-
-    def send_confirmation_email(self, user):
-        """ Send account verification link to given user. """
-        verification_token = self.gen_verification_token(user)
-        # Send Email
-        subject = 'Welcome @{}! Verify your account to start using ' \
-                  'Comparte RIDE'.format(user.username)
-        from_email ='Comparte Ride <noreply@comparteride.com>'
-        content = render_to_string(
-            'emails/users/account_verification.html',
-            {'token': verification_token, 'user': user}
-        )
-        msg = EmailMultiAlternatives(subject,
-                                     content,
-                                     from_email,
-                                     [user.email])
-        msg.attach_alternative(content, "text/html")
-        msg.send()
-
-    def gen_verification_token(self, user):
-        """ Create JWT token that the user can use to verify its account """
-        exp_date = timezone.now() + timedelta(days=3)
-        paylod = {
-            'user': user.username,
-            'exp': int(exp_date.timestamp()),
-            'type': 'email_confirmation'
-        }
-        token = jwt.encode(
-            paylod,
-            settings.SECRET_KEY,
-            algorithm='HS256'
-        )
-        return token.decode()
 
 
 class UserLoginSerializer(serializers.Serializer):

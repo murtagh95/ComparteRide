@@ -19,18 +19,19 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# DATABASES
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES WITHOUT DOCKER
+# BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # DATABASES = {
-#     'default': env.db('DATABASE_URL'),
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 # }
-# DATABASES['default']['ATOMIC_REQUESTS'] = True
+# DATABASES WITH DOCKER
+DATABASES = {
+    'default': env.db('DATABASE_URL'),
+}
+DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # URLs
 ROOT_URLCONF = 'config.urls'
